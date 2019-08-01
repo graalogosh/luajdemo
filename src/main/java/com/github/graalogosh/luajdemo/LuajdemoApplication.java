@@ -19,10 +19,14 @@ public class LuajdemoApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        final String statement = "print (variable); return variable;";
         final String statement = "for i=1, 4 do print(variable[i]) end; return variable[1];";
-
         ScriptEngineManager manager = new ScriptEngineManager();
+
+        processStringArray(manager, statement);
+        printAvailableEngines(manager);
+    }
+
+    private void processStringArray(ScriptEngineManager manager, String statement) throws ScriptException {
         ScriptEngine engine = manager.getEngineByName("lua");
         CompiledScript script = ((Compilable) engine).compile(statement);
 
@@ -30,29 +34,29 @@ public class LuajdemoApplication implements CommandLineRunner {
         sb.put("variable", new String[]{"first", "second", "third"});
 
         log.info("Result of LUA call: {}", script.eval(sb));
+    }
 
+    private void printAvailableEngines(final ScriptEngineManager manager){
+        List<ScriptEngineFactory> factories = manager.getEngineFactories();
 
+        for (ScriptEngineFactory factory : factories) {
 
-//        List<ScriptEngineFactory> factories = manager.getEngineFactories();
-//
-//        for (ScriptEngineFactory factory : factories) {
-//
-//           log.info("ScriptEngineFactory Info");
-//
-//            String engName = factory.getEngineName();
-//            String engVersion = factory.getEngineVersion();
-//            String langName = factory.getLanguageName();
-//            String langVersion = factory.getLanguageVersion();
-//
-//            log.info("\tScript Engine: {} ({})", engName, engVersion);
-//
-//            List<String> engNames = factory.getNames();
-//            for(String name : engNames) {
-//                log.info("\tEngine Alias: {}", name);
-//            }
-//
-//            log.info("\tLanguage: {} ({})", langName, langVersion);
-//
-//        }
+            log.info("ScriptEngineFactory Info");
+
+            String engName = factory.getEngineName();
+            String engVersion = factory.getEngineVersion();
+            String langName = factory.getLanguageName();
+            String langVersion = factory.getLanguageVersion();
+
+            log.info("\tScript Engine: {} ({})", engName, engVersion);
+
+            List<String> engNames = factory.getNames();
+            for (String name : engNames) {
+                log.info("\tEngine Alias: {}", name);
+            }
+
+            log.info("\tLanguage: {} ({})", langName, langVersion);
+
+        }
     }
 }
